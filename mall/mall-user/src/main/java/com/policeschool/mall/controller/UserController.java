@@ -1,8 +1,10 @@
 package com.policeschool.mall.controller;
 
+import com.policeschool.mall.remote.FeignClientTest;
 import com.policeschool.mall.util.ApiUtils;
 import com.policeschool.mall.util.RemoteLoad;
 import com.policeschool.mall.util.ResponseModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +25,9 @@ public class UserController extends RemoteLoad {
     @Value("${service.url.order}")
     private String serviceOrderUrl;
 
+    @Autowired
+    private FeignClientTest feignClientTest;
+
     @RequestMapping(value = "/testRestTemplate")
     public ResponseModel testRestTemplate(HttpServletRequest request) {
         HashMap<String, Object> par = new HashMap<>();
@@ -35,6 +40,13 @@ public class UserController extends RemoteLoad {
         //【3】参数类型 par
         System.out.println("ididi");
         ResponseModel res = postRestObject(serviceOrderUrl, "/order/order/getUserOrderInfo", ResponseModel.class, par);
+        return res;
+    }
+
+    @RequestMapping(value="/testFeignClient")
+    public ResponseModel testFeignClient(HttpServletRequest request){
+        Integer pageIndex = Integer.parseInt(request.getParameter("pageIndex"));
+        ResponseModel res = feignClientTest.productBrandPage(pageIndex);
         return res;
     }
 }
