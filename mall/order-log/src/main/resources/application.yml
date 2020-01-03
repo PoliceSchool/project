@@ -1,20 +1,21 @@
 server:
-  port: 8782
+  port: 8792
 
 spring:
   application:
-    name: mall-order
+    name: order-log
   rabbitmq:
-    host: 47.107.94.174
-    port: 5672
-    username: guest
-    password: guest
+      host: 47.107.94.174
+      port: 5672
+      username: guest
+      password: guest
 
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
 
+# https://www.cnblogs.com/jing99/p/11679426.html
 mq:
   config:
     exchange: log.direct
