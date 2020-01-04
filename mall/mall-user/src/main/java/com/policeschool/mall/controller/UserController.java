@@ -1,16 +1,20 @@
 package com.policeschool.mall.controller;
 
+import com.policeschool.mall.domain.User;
 import com.policeschool.mall.remote.FeignClientTest;
+import com.policeschool.mall.service.UserService;
 import com.policeschool.mall.util.ApiUtils;
 import com.policeschool.mall.util.RemoteLoad;
 import com.policeschool.mall.util.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author: lujingxiao
@@ -27,6 +31,8 @@ public class UserController extends RemoteLoad {
 
     @Autowired
     private FeignClientTest feignClientTest;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/testRestTemplate")
     public ResponseModel testRestTemplate(HttpServletRequest request) {
@@ -43,10 +49,16 @@ public class UserController extends RemoteLoad {
         return res;
     }
 
-    @RequestMapping(value="/testFeignClient")
-    public ResponseModel testFeignClient(HttpServletRequest request){
+    @RequestMapping(value = "/testFeignClient")
+    public ResponseModel testFeignClient(HttpServletRequest request) {
         Integer pageIndex = Integer.parseInt(request.getParameter("pageIndex"));
         ResponseModel res = feignClientTest.productBrandPage(pageIndex);
         return res;
+    }
+
+    @GetMapping("/users")
+    public List<User> lists() {
+        System.out.println("enter users");
+        return userService.getUsers();
     }
 }
