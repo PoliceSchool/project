@@ -1,0 +1,23 @@
+server:
+  port: 8110
+
+spring:
+  application:
+    name: mall-product
+  redis:
+    database: 0
+    host: 47.107.94.174
+    port: 6379
+    password:
+    lecttuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 200
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

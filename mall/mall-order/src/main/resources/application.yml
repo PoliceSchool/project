@@ -5,7 +5,7 @@ spring:
   application:
     name: mall-order
   rabbitmq:
-    host: 47.107.94.174
+    host: localhost
     port: 5672
     username: guest
     password: guest

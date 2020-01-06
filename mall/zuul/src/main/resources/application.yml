@@ -18,6 +18,9 @@ zuul:
     user:
       path: /user/**
       service-id: mall-user
+    product:
+          path: /product/**
+          service-id: mall-product
     order-log:
       path: /order-log/**
       service-id: order-log
