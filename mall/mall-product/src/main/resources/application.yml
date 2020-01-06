@@ -6,7 +6,7 @@ spring:
     name: mall-product
   redis:
     database: 0
-    host: 47.107.94.174
+    host: localhost
     port: 6379
     password:
     lecttuce:
