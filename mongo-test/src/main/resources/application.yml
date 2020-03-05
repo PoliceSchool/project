@@ -1,0 +1,5 @@
+spring:
+  data:
+    host: localhost
+    database: articledb
+    port: 27017
