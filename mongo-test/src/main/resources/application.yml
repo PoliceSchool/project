@@ -1,5 +1,5 @@
 spring:
   data:
-    host: localhost
-    database: articledb
-    port: 27017
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: articledb
