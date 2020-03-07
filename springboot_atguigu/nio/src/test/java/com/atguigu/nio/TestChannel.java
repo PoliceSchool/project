@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -39,6 +38,10 @@ import java.nio.file.StandardOpenOption;
  *
  * 2. 在JDK1.7中的NIO2针对各个通道提供了静态方法open()
  * 3. 在JDK1.7中的NIO2的Files工具类的newByteChannel()
+ *
+ * 四.通道之间的数据传输
+ * transferFrom()
+ * transferTo()
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -99,5 +102,17 @@ public class TestChannel {
         outChnnel.close();
         long end = System.currentTimeMillis();
         System.out.println("耗费时间为:" + (end - start));
+    }
+
+    // 通道之间的数据传输(直接缓冲区)
+    @Test
+    public void test3() throws IOException {
+        FileChannel inChannel = FileChannel.open(Paths.get("/home/jimson/temp/ideaIC-2019.2.3.tar.gz"), StandardOpenOption.READ);
+        FileChannel outChnnel = FileChannel.open(Paths.get("/home/jimson/temp/2.ideaIC-2019.2.3.tar.gz"), StandardOpenOption.READ, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW);
+
+        inChannel.transferTo(0, inChannel.size(), outChnnel);
+        outChnnel.transferFrom(inChannel, 0, inChannel.size());
+        inChannel.close();
+        outChnnel.close();
     }
 }
