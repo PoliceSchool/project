@@ -7,3 +7,4 @@ TestBlockingNIO
 TestBlockingNIO2
 TestNonBlockingNIO
 TestNonBlockingNIO2
+TestPipe
