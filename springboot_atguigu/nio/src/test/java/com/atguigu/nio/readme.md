@@ -5,3 +5,5 @@ TestBuffer
 TestChannel
 TestBlockingNIO
 TestBlockingNIO2
+TestNonBlockingNIO
+TestNonBlockingNIO2
