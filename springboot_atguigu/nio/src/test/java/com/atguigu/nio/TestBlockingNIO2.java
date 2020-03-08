@@ -69,7 +69,7 @@ public class TestBlockingNIO2 {
         ServerSocketChannel ssChannel = ServerSocketChannel.open();
         // 2.绑定连接
         ssChannel.bind(new InetSocketAddress(9898));
-        // 3.获取客户端连接的通道
+        // 3.获取客户端连接的通道(阻塞等待远程连接)
         SocketChannel sChannel = ssChannel.accept();
         // 4. 接收客户端数据并保存到本地
         ByteBuffer buf = ByteBuffer.allocate(1024);
