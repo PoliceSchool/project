@@ -1,5 +1,6 @@
 package com.atguigu.nio;
 
+import net.minidev.json.JSONUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,10 +8,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 参考连接:https://www.bilibili.com/video/av35956039?p=6
@@ -45,6 +53,10 @@ import java.nio.file.StandardOpenOption;
  * 五. 分散(Scatter)与聚集(Gather)
  * 分散读取(Scattering Reads) : 将通道中的数据分散到多个缓冲区中
  * 聚集写入(Gathering Writes) : 将多个缓冲区中的数据聚集到通道中
+ *
+ * 六. 字符集 Charset
+ * 编码: 字符串 -> 字节数组
+ * 解码: 字节数组 -> 字符串
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -146,5 +158,46 @@ public class TestChannel {
         RandomAccessFile raf2 = new RandomAccessFile("/home/jimson/temp/2.txt","rw");
         FileChannel channel2 = raf2.getChannel();
         channel2.write(bufs);
+    }
+
+    @Test
+    public void test5() {
+        Map<String, Charset> map = Charset.availableCharsets();
+        Set<Map.Entry<String, Charset>> set = map.entrySet();
+        for (Map.Entry<String, Charset> entry : set) {
+            System.out.println(entry.getKey() + "=" + entry.getValue());
+        }
+    }
+
+    @Test
+    public void test6() throws CharacterCodingException {
+        Charset cs1 = Charset.forName("GBK");
+
+        // 获取编码器 与 解码器
+        CharsetEncoder ce = cs1.newEncoder();
+
+        // 获取解码器
+        CharsetDecoder cd = cs1.newDecoder();
+        CharBuffer charBuffer = CharBuffer.allocate(1024);
+        charBuffer.put("今天天气真好");
+        charBuffer.flip();
+
+        // 编码
+        ByteBuffer byteBuffer = ce.encode(charBuffer);
+        for (int i = 0; i < 12; i++) {
+            System.out.println(byteBuffer.get());
+        }
+
+        // 解码
+        byteBuffer.flip();
+        CharBuffer charBuffer1 = cd.decode(byteBuffer);
+        System.out.println(charBuffer1.toString());
+
+
+        System.out.println("--------------------------------------------");
+        byteBuffer.flip();
+        Charset cs2 = Charset.forName("UTF-8");
+        CharBuffer charBuffer3 = cs2.decode(byteBuffer);
+        System.out.println(charBuffer3.toString());
     }
 }
