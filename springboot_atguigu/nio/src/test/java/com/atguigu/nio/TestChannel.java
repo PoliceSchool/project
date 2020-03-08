@@ -5,9 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -15,6 +13,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 /**
+ * 参考连接:https://www.bilibili.com/video/av35956039?p=6
  * 一.通道(Channel):用于源节点与目标节点的连接.
  * 在Java NIO中负责缓冲区中数据的传输.Channel本身不存储数据,因此余姚配合缓冲区进行传输.
  *
@@ -42,6 +41,10 @@ import java.nio.file.StandardOpenOption;
  * 四.通道之间的数据传输
  * transferFrom()
  * transferTo()
+ *
+ * 五. 分散(Scatter)与聚集(Gather)
+ * 分散读取(Scattering Reads) : 将通道中的数据分散到多个缓冲区中
+ * 聚集写入(Gathering Writes) : 将多个缓冲区中的数据聚集到通道中
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -114,5 +117,34 @@ public class TestChannel {
         outChnnel.transferFrom(inChannel, 0, inChannel.size());
         inChannel.close();
         outChnnel.close();
+    }
+
+    @Test
+    public void test4() throws IOException {
+        RandomAccessFile raf1 = new RandomAccessFile("/home/jimson/temp/1.txt", "rw");
+
+        // 1. 获取通道
+        FileChannel channel1 = raf1.getChannel();
+
+        // 2. 分配指定大小的缓冲区
+        ByteBuffer buf1 = ByteBuffer.allocate(100);
+        ByteBuffer buf2 = ByteBuffer.allocate(1024);
+
+        // 3. 分散读取
+        ByteBuffer[] bufs = {buf1, buf2};
+        channel1.read(bufs);
+
+        for (ByteBuffer buf : bufs) {
+            buf.flip();
+        }
+
+        System.out.println(new String(bufs[0].array(), 0, bufs[0].limit()));
+        System.out.println("------------------");
+        System.out.println(new String(bufs[1].array(), 0, bufs[1].limit()));
+
+        // 4. 聚集写入
+        RandomAccessFile raf2 = new RandomAccessFile("/home/jimson/temp/2.txt","rw");
+        FileChannel channel2 = raf2.getChannel();
+        channel2.write(bufs);
     }
 }
