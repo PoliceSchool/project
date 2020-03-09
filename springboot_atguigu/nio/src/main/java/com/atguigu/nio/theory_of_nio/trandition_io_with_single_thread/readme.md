@@ -1,0 +1,11 @@
+当前该包下的代码展示单线程下传统的网络io所对应的缺点
+ServerSocket的accept方法 和 Socket的read方法会被阻塞
+在单线程环境
+若client1先跟server建立连接,但是建立后连接之后client1不继续发送数据,那么server就会被阻塞在read方法上;
+此时如果client2也想跟server建立连接,那么client2是无法跟server成功建立连接的,除非client1发送数据完毕.
+代码测试:
+1. 先启动MyServer, MyServer会阻塞在accept方法上
+2. 再启动MyClient, MyServer的accept方法阻塞解除, 并等待客户端输入数据, 此时会阻塞
+3. 最后再启动多一次MyClient发现连接不上服务端, 因为MyServer还在等上一个客户端输入数据
+
+针对单线程传统网络IO的缺点,可以使用多线程解决,相关代码在trandition_io_with_multi_thread包下
